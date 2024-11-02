@@ -1,13 +1,13 @@
 import math
 
-import pygame.sprite
+from pygame.sprite import Group
 from constants import display, tile_size
 from costume_sprite import CostumeSpriteFactory
 
 class Grid:
     """
-    Represents a grid of tiles. The scene contains the entire grid, and a
-    viewport looks into a rectangular region of the scene.
+    Grid of tiles, consisting of two parts: the scene, a large rectangular area,
+    and a viewport, a smaller rectangular area looking into the scene.
     """
 
     # (x, y) dimensions of tiles to fill display
@@ -32,7 +32,7 @@ class Grid:
              for _ in range(Grid.viewport[1])]
 
         # make a group for the tiles
-        self.group = pygame.sprite.Group()
+        self.group = Group()
         for row in self.sprites:
             self.group.add(row)
 
@@ -83,7 +83,8 @@ class Grid:
         row = math.floor(y / tile_size)
         return self.tiles[column][row]
 
-    def locate(self, tile_position, camera):
+    @staticmethod
+    def locate(tile_position, camera):
         """Calculates the viewport coordinates of a tile.
 
           This function determines the pixel coordinates of a tile relative to

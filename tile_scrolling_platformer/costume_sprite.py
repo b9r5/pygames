@@ -47,3 +47,7 @@ class CostumeSpriteFactory:
     def make_sprite(self, costume=0, position=(0,0)):
         """Make a CostumeSprite with an optional costume number and position."""
         return CostumeSprite(self.costumes, costume, position)
+
+    def count(self):
+        """Return the number of costumes."""
+        return len(self.costumes)
