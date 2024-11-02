@@ -1,13 +1,15 @@
 import pygame
 from constants import display, tile_size
-from costume_sprite import CostumeSprite
+from grid import Grid
 
 pygame.init()
 screen = pygame.display.set_mode(display)
 clock = pygame.time.Clock()
 running = True
 
-tile_group = pygame.sprite.Group()
+grid = Grid()
+camera = pygame.Vector2(0, 0)
+dt = 0  # delta time in seconds since last frame
 
 while running:
     for event in pygame.event.get():
@@ -15,23 +17,27 @@ while running:
             running = False
 
     if running:
-        tile_group.empty()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            camera.y -= 64 * dt
+        if keys[pygame.K_s]:
+            camera.y += 64 * dt
+        if keys[pygame.K_a]:
+            camera.x -= 64 * dt
+        if keys[pygame.K_d]:
+            camera.x += 64 * dt
+
+        if camera.x < 0:
+            camera.x = 0
+        if camera.y < 0:
+            camera.y = 0
+        # TODO clamp camera to be within right and bottom limits
 
         screen.fill("white")
 
-        clone_count_y = 5
-        x = display[0] / 2
-        y = display[1] / 2
+        grid.draw(screen, camera)
 
-        for _ in range(clone_count_y):
-            tile = CostumeSprite('assets/Tiles')
-            tile.go_to((x, y))
-            tile.switch_costume(8)
-            tile_group.add(tile)
-            x += tile_size
-
-        tile_group.draw(screen)
         pygame.display.flip()
-        clock.tick(60)
+        dt = clock.tick(60) / 1000
 
 pygame.quit()
